@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { supabase } from '@/lib/supabase'
 
-export const maxDuration = 120
+export const maxDuration = 60
 
 const client = new Anthropic()
 
@@ -48,7 +48,7 @@ Web検索を使って上記の企業の公式サイトやニュース等を調�
 
   let responseText = ''
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const response = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 4096,

@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "src/app/api/research/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/reports/[id]/financials/route.ts": {
+      "maxDuration": 60
+    }
+  }
+}
