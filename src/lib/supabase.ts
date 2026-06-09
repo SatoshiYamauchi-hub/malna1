@@ -1,23 +1,18 @@
 import { createClient } from '@supabase/supabase-js'
 
-export type TaskStatus = 'todo' | 'in_progress' | 'done'
-
-export interface Minutes {
+export interface Report {
   id: string
-  title: string
-  content: string
-  summary: string | null
-  meeting_date: string | null
-  created_at: string
-}
-
-export interface Task {
-  id: string
-  minutes_id: string | null
-  title: string
-  assignee: string | null
-  due_date: string | null
-  status: TaskStatus
+  company_name: string
+  website: string | null
+  corporate_number: string | null
+  industry: string | null
+  founded: string | null
+  capital: string | null
+  representative: string | null
+  employee_count: string | null
+  address: string | null
+  business_description: string | null
+  recent_topics: string | null
   created_at: string
 }
 

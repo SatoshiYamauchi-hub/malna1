@@ -1,25 +1,20 @@
--- 議事録テーブル
-create table if not exists minutes (
+-- 企業調査レポートテーブル
+create table if not exists reports (
   id uuid primary key default gen_random_uuid(),
-  title text not null,
-  content text not null,
-  summary text,
-  meeting_date date,
-  created_at timestamptz default now()
-);
-
--- タスクテーブル
-create table if not exists tasks (
-  id uuid primary key default gen_random_uuid(),
-  minutes_id uuid references minutes(id) on delete cascade,
-  title text not null,
-  assignee text,
-  due_date date,
-  status text not null default 'todo' check (status in ('todo', 'in_progress', 'done')),
+  company_name text not null,
+  website text,
+  corporate_number text,
+  industry text,
+  founded text,
+  capital text,
+  representative text,
+  employee_count text,
+  address text,
+  business_description text,
+  recent_topics text,
   created_at timestamptz default now()
 );
 
 -- インデックス
-create index if not exists tasks_minutes_id_idx on tasks(minutes_id);
-create index if not exists tasks_due_date_idx on tasks(due_date);
-create index if not exists tasks_status_idx on tasks(status);
+create index if not exists reports_company_name_idx on reports(company_name);
+create index if not exists reports_created_at_idx on reports(created_at desc);
