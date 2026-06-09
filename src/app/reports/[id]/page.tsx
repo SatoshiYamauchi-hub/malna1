@@ -29,7 +29,11 @@ function FinancialSection({ reportId }: { reportId: string }) {
   useEffect(() => {
     fetch(`/api/reports/${reportId}/financials`)
       .then(r => r.json())
-      .then(data => { setRecords(data); setLoading(false) })
+      .then(data => {
+        setRecords(Array.isArray(data) ? data : [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
   }, [reportId])
 
   const handleExtract = async () => {
