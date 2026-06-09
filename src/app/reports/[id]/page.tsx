@@ -60,6 +60,29 @@ export default function ReportDetailPage() {
 
       <div className="bg-white rounded-xl border border-slate-200 p-5">
         <h3 className="text-sm font-semibold text-slate-700 mb-3">基本情報</h3>
+
+        {/* 上場区分バッジ */}
+        {report.listing_status && (
+          <div className="flex gap-3 py-3 border-b border-slate-100">
+            <span className="text-sm text-slate-500 w-32 shrink-0">上場区分</span>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                report.listing_status === '上場'
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : 'bg-slate-100 text-slate-600'
+              }`}>
+                {report.listing_status}
+              </span>
+              {report.stock_exchange && (
+                <span className="text-sm text-slate-600">{report.stock_exchange}</span>
+              )}
+              {report.stock_code && (
+                <span className="text-sm text-slate-500 font-mono">{report.stock_code}</span>
+              )}
+            </div>
+          </div>
+        )}
+
         <InfoRow label="業種・業態" value={report.industry} />
         <InfoRow label="設立" value={report.founded} />
         <InfoRow label="資本金" value={report.capital} />

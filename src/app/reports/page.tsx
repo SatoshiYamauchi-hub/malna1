@@ -77,7 +77,18 @@ export default function ReportsPage() {
               <div className="bg-white rounded-xl border border-slate-200 p-5 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-slate-800">{r.company_name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-slate-800">{r.company_name}</h3>
+                      {r.listing_status && (
+                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                          r.listing_status === '上場'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-slate-100 text-slate-500'
+                        }`}>
+                          {r.listing_status}
+                        </span>
+                      )}
+                    </div>
                     <div className="flex flex-wrap items-center gap-3 mt-1.5">
                       {r.industry && (
                         <span className="text-xs bg-blue-50 text-blue-700 rounded-full px-2 py-0.5">{r.industry}</span>

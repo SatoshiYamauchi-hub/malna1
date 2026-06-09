@@ -8,6 +8,7 @@ export default function HomePage() {
   const [companyName, setCompanyName] = useState('')
   const [website, setWebsite] = useState('')
   const [corporateNumber, setCorporateNumber] = useState('')
+  const [listingStatus, setListingStatus] = useState<'上場' | '非上場' | ''>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -26,6 +27,7 @@ export default function HomePage() {
           companyName: companyName.trim(),
           website: website.trim() || null,
           corporateNumber: corporateNumber.trim() || null,
+          listingStatus: listingStatus || null,
         }),
       })
 
@@ -66,6 +68,37 @@ export default function HomePage() {
           />
         </div>
 
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              上場区分 <span className="text-slate-400 text-xs font-normal">（任意・未入力で自動判定）</span>
+            </label>
+            <select
+              value={listingStatus}
+              onChange={e => setListingStatus(e.target.value as '上場' | '非上場' | '')}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            >
+              <option value="">自動判定</option>
+              <option value="上場">上場</option>
+              <option value="非上場">非上場</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">
+              法人番号 <span className="text-slate-400 text-xs font-normal">（任意）</span>
+            </label>
+            <input
+              type="text"
+              value={corporateNumber}
+              onChange={e => setCorporateNumber(e.target.value)}
+              placeholder="例：1234567890123"
+              maxLength={13}
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
             公式HP <span className="text-slate-400 text-xs font-normal">（任意）</span>
@@ -75,20 +108,6 @@ export default function HomePage() {
             value={website}
             onChange={e => setWebsite(e.target.value)}
             placeholder="例：https://www.kpmg.com/jp"
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">
-            法人番号 <span className="text-slate-400 text-xs font-normal">（任意）</span>
-          </label>
-          <input
-            type="text"
-            value={corporateNumber}
-            onChange={e => setCorporateNumber(e.target.value)}
-            placeholder="例：1234567890123"
-            maxLength={13}
             className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>

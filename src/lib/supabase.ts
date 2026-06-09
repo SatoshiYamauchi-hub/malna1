@@ -5,6 +5,9 @@ export interface Report {
   company_name: string
   website: string | null
   corporate_number: string | null
+  listing_status: '上場' | '非上場' | null
+  stock_exchange: string | null
+  stock_code: string | null
   industry: string | null
   founded: string | null
   capital: string | null

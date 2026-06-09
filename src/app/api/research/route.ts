@@ -7,11 +7,15 @@ export const maxDuration = 120
 const client = new Anthropic()
 
 export async function POST(req: NextRequest) {
-  const { companyName, website, corporateNumber } = await req.json()
+  const { companyName, website, corporateNumber, listingStatus } = await req.json()
 
   if (!companyName?.trim()) {
     return NextResponse.json({ error: '企業名を入力してください' }, { status: 400 })
   }
+
+  const listingInstruction = listingStatus
+    ? `上場区分は「${listingStatus}」です。`
+    : `上場・非上場の区別をWeb検索で判定してください。上場企業の場合は上場市場（東証プライム／スタンダード／グロース等）と証券コードも調べてください。`
 
   const prompt = `以下の企業について調査し、情報を収集してください。
 
@@ -19,10 +23,15 @@ export async function POST(req: NextRequest) {
 ${website ? `公式HP: ${website}` : ''}
 ${corporateNumber ? `法人番号: ${corporateNumber}` : ''}
 
+${listingInstruction}
+
 Web検索を使って上記の企業の公式サイトやニュース等を調べ、以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
 
 {
   "company_name": "正式企業名（登記名称）",
+  "listing_status": "上場" または "非上場",
+  "stock_exchange": "上場市場（例：東証プライム、東証スタンダード、東証グロース）。非上場の場合はnull",
+  "stock_code": "証券コード（4桁）。非上場の場合はnull",
   "industry": "業種・業態",
   "founded": "設立年月日",
   "capital": "資本金",
@@ -90,6 +99,9 @@ Web検索を使って上記の企業の公式サイトやニュース等を調�
       company_name: parsed.company_name || companyName,
       website: website || null,
       corporate_number: corporateNumber || null,
+      listing_status: parsed.listing_status || listingStatus || null,
+      stock_exchange: parsed.stock_exchange || null,
+      stock_code: parsed.stock_code || null,
       industry: parsed.industry || null,
       founded: parsed.founded || null,
       capital: parsed.capital || null,
