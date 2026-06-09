@@ -7,6 +7,7 @@ export const maxDuration = 60
 const client = new Anthropic()
 
 export async function POST(req: NextRequest) {
+  try {
   const { companyName, website, corporateNumber, listingStatus } = await req.json()
 
   if (!companyName?.trim()) {
@@ -130,4 +131,8 @@ Web検索を使って上記の企業の公式サイトやニュース等を調�
   }
 
   return NextResponse.json({ reportId: reportData.id })
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e)
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
 }
