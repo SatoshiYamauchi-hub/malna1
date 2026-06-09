@@ -81,16 +81,27 @@ Web検索を使って上記の企業の公式サイトやニュース等を調�
     })
   }
 
-  const jsonMatch = responseText.match(/\{[\s\S]*\}/)
+  // マークダウンのコードブロックを除去してからJSONを抽出
+  const cleaned = responseText
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/g, '')
+    .trim()
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
   if (!jsonMatch) {
-    return NextResponse.json({ error: 'AIの応答を解析できませんでした' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'AIの応答を解析できませんでした', raw: responseText.slice(0, 300) },
+      { status: 500 }
+    )
   }
 
   let parsed: Record<string, string | null>
   try {
     parsed = JSON.parse(jsonMatch[0])
   } catch {
-    return NextResponse.json({ error: 'JSONの解析に失敗しました' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'JSONの解析に失敗しました', raw: jsonMatch[0].slice(0, 300) },
+      { status: 500 }
+    )
   }
 
   const { data: reportData, error: reportError } = await supabase

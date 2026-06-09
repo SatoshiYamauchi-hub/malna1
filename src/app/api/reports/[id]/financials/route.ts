@@ -102,7 +102,11 @@ ${report.website ? `公式サイト: ${report.website}` : ''}
     })
   }
 
-  const arrMatch = urlResponseText.match(/\[[\s\S]*\]/)
+  const cleanedUrl = urlResponseText
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/g, '')
+    .trim()
+  const arrMatch = cleanedUrl.match(/\[[\s\S]*\]/)
   if (!arrMatch) {
     return NextResponse.json({ error: 'PDF URLの取得に失敗しました' }, { status: 500 })
   }
@@ -181,7 +185,8 @@ ${report.website ? `公式サイト: ${report.website}` : ''}
 
       const tb = res.content.find((b) => b.type === 'text')
       const raw = tb?.type === 'text' ? tb.text : ''
-      const jsonMatch = raw.match(/\{[\s\S]*\}/)
+      const cleanedRaw = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim()
+      const jsonMatch = cleanedRaw.match(/\{[\s\S]*\}/)
       if (jsonMatch) parsed = JSON.parse(jsonMatch[0])
     } catch {
       // PDF 読み取り失敗はスキップ（URLが無効など）
