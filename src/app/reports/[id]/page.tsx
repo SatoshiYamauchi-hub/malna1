@@ -93,7 +93,7 @@ function FinancialSection({ reportId }: { reportId: string }) {
 
       {records.length === 0 && !extracting && !error && (
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-400 text-sm">
-          ボタンを押すとIRページのPDFから決算情報を自動取得します
+          ボタンを押すとWeb検索で決算情報を自動取得します
         </div>
       )}
 
