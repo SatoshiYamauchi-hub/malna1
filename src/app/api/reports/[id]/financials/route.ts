@@ -42,8 +42,14 @@ export async function POST(
     return NextResponse.json({ error: '上場企業のみ対応しています' }, { status: 400 })
   }
 
+  const websiteHint = report.website
+    ? `【重要】まず最初に公式サイト（${report.website}）のIRページを参照してください。そこで得られた情報を優先し、不足分のみ追加検索してください。`
+    : `Web検索でIR情報・決算情報を調べてください。`
+
   const prompt = `${report.company_name}の決算情報をWeb検索で調べてください。
 ${report.website ? `公式サイト: ${report.website}` : ''}
+
+${websiteHint}
 
 以下の情報を収集してください：
 1. 直近の決算短信（最新1期）の財務データとPDF URL
@@ -83,11 +89,12 @@ ${report.website ? `公式サイト: ${report.website}` : ''}
 
   const messages: Anthropic.MessageParam[] = [{ role: 'user', content: prompt }]
   let responseText = ''
+  const maxLoops = report.website ? 3 : 5
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < maxLoops; i++) {
     const res = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
       tools: [{ type: 'web_search_20250305' as const, name: 'web_search' }],
       messages,
     })

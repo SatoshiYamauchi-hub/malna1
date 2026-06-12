@@ -18,6 +18,10 @@ export async function POST(req: NextRequest) {
     ? `上場区分は「${listingStatus}」です。`
     : `上場・非上場の区別をWeb検索で判定してください。上場企業の場合は上場市場（東証プライム／スタンダード／グロース等）と証券コードも調べてください。`
 
+  const websiteInstruction = website
+    ? `【重要】まず最初に公式HP（${website}）を検索・参照してください。そこで得られた情報を優先し、不足分のみ追加検索してください。`
+    : `Web検索で企業の公式サイトやニュースを調べてください。`
+
   const prompt = `以下の企業について調査し、情報を収集してください。
 
 企業名: ${companyName}
@@ -26,7 +30,9 @@ ${corporateNumber ? `法人番号: ${corporateNumber}` : ''}
 
 ${listingInstruction}
 
-Web検索を使って上記の企業の公式サイトやニュース等を調べ、以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
+${websiteInstruction}
+
+以下のJSON形式のみで回答してください。他のテキストは一切含めないでください。
 
 {
   "company_name": "正式企業名（登記名称）",
@@ -48,11 +54,12 @@ Web検索を使って上記の企業の公式サイトやニュース等を調�
   const messages: Anthropic.MessageParam[] = [{ role: 'user', content: prompt }]
 
   let responseText = ''
+  const maxLoops = website ? 2 : 3
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < maxLoops; i++) {
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
+      model: 'claude-haiku-4-5',
+      max_tokens: 1024,
       tools: [{ type: 'web_search_20250305' as const, name: 'web_search' }],
       messages,
     })
